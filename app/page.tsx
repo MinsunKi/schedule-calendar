@@ -18,6 +18,7 @@ export default function CalendarPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [savedFlash, setSavedFlash] = useState(false);
+  const [apiError, setApiError] = useState("");
 
   // modals
   const [loginOpen, setLoginOpen] = useState(false);
@@ -38,8 +39,15 @@ export default function CalendarPage() {
     try {
       const res = await fetch(`/api/memos?year=${y}&month=${m}`);
       const data = await res.json();
-      setMemos(data.memos ?? {});
-    } catch {
+      if (data.error) {
+        setApiError(`読み込みエラー: ${data.error}`);
+        setMemos({});
+      } else {
+        setApiError("");
+        setMemos(data.memos ?? {});
+      }
+    } catch (e) {
+      setApiError(`接続エラー: ${String(e)}`);
       setMemos({});
     } finally {
       setLoading(false);
@@ -114,11 +122,14 @@ export default function CalendarPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password: pw, date: dateStr(curYear, curMonth, selectedDay), memo: memoInput }),
     });
+    const data = await res.json();
     if (res.ok) {
       await fetchMemos(curYear, curMonth);
       flashSaved();
       setMemoOpen(false);
       setSelectedDay(null);
+    } else {
+      alert(`保存エラー: ${data.error ?? res.status}`);
     }
     setSaving(false);
   }
@@ -198,6 +209,13 @@ export default function CalendarPage() {
             <button onClick={() => changeMonth(1)} style={btnStyle("nav")}>›</button>
           </div>
         </div>
+
+        {/* ── API 오류 표시 ── */}
+        {apiError && (
+          <div style={{ background:"#fee2e2", color:"#991b1b", borderRadius:8, padding:"10px 14px", marginBottom:12, fontSize:12 }}>
+            ⚠ {apiError}
+          </div>
+        )}
 
         {/* ── 캘린더 그리드 ── */}
         <div style={{ background:"white", borderRadius:14, overflow:"hidden", boxShadow:"0 2px 16px rgba(0,0,0,0.07)" }}>

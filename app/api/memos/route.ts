@@ -18,9 +18,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "year, month 필요" }, { status: 400 });
   }
 
-  const from = `${year}-${String(Number(month) + 1).padStart(2, "0")}-01`;
+  const mm = String(Number(month) + 1).padStart(2, "0");
   const lastDay = new Date(Number(year), Number(month) + 1, 0).getDate();
-  const to = `${year}-${String(Number(month) + 1).padStart(2, "0")}-${lastDay}`;
+  const from = `${year}-${mm}-01`;
+  const to = `${year}-${mm}-${String(lastDay).padStart(2, "0")}`;
 
   const supabase = getAdminClient();
   const { data, error } = await supabase
@@ -33,8 +34,9 @@ export async function GET(req: NextRequest) {
 
   const result: Record<string, string> = {};
   for (const row of data ?? []) {
-    const d = new Date(row.date);
-    const key = `${d.getUTCFullYear()}-${d.getUTCMonth()}-${d.getUTCDate()}`;
+    // date 컬럼은 "2025-04-15" 형식 — UTC 파싱 후 월/일 추출
+    const [y, m, d] = (row.date as string).split("-").map(Number);
+    const key = `${y}-${m - 1}-${d}`;
     result[key] = row.memo;
   }
 
