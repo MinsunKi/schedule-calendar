@@ -1,8 +1,8 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const MONTHS = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const DAY_LABELS = ["일","월","화","수","목","금","토"];
+const MONTHS = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
+const DAY_LABELS = ["日","月","火","水","木","金","土"];
 
 function memoKey(y: number, m: number, d: number) { return `${y}-${m}-${d}`; }
 
@@ -162,20 +162,20 @@ export default function CalendarPage() {
         {/* ── 헤더 ── */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:20, flexWrap:"wrap", gap:10 }}>
           <div style={{ fontSize:24, fontWeight:700, color:"#1e293b" }}>
-            {curYear}년 {MONTHS[curMonth]}
-            <span style={{ fontSize:13, fontWeight:400, color:"#94a3b8", marginLeft:8 }}>스케줄</span>
+            {curYear}年 {MONTHS[curMonth]}
+            <span style={{ fontSize:13, fontWeight:400, color:"#94a3b8", marginLeft:8 }}>スケジュール</span>
           </div>
 
           <div style={{ display:"flex", gap:6, alignItems:"center", flexWrap:"wrap" }}>
             {savedFlash && (
-              <span style={{ fontSize:11, color:"#22c55e", fontWeight:500 }}>✓ 저장됨</span>
+              <span style={{ fontSize:11, color:"#22c55e", fontWeight:500 }}>✓ 保存済み</span>
             )}
             {loading && (
-              <span style={{ fontSize:11, color:"#94a3b8" }}>불러오는 중...</span>
+              <span style={{ fontSize:11, color:"#94a3b8" }}>読み込み中...</span>
             )}
 
             {!isAdmin ? (
-              <button onClick={openLogin} style={btnStyle("outline")}>🔒 관리자</button>
+              <button onClick={openLogin} style={btnStyle("outline")}>🔒 管理者</button>
             ) : (
               <>
                 <span style={{
@@ -185,16 +185,16 @@ export default function CalendarPage() {
                   padding:"4px 12px", fontSize:11, fontWeight:700
                 }}>
                   <span style={{ width:7, height:7, borderRadius:"50%", background:"#f59e0b", display:"inline-block" }} />
-                  관리자 모드
+                  管理者モード
                 </span>
                 <button onClick={logout} style={{ background:"#fee2e2", border:"none", borderRadius:8, padding:"6px 12px", fontSize:11, cursor:"pointer", color:"#ef4444", fontWeight:600 }}>
-                  로그아웃
+                  ログアウト
                 </button>
               </>
             )}
 
             <button onClick={() => changeMonth(-1)} style={btnStyle("nav")}>‹</button>
-            <button onClick={goToday} style={{ ...btnStyle("nav"), fontSize:12 }}>이번달</button>
+            <button onClick={goToday} style={{ ...btnStyle("nav"), fontSize:12 }}>今月</button>
             <button onClick={() => changeMonth(1)} style={btnStyle("nav")}>›</button>
           </div>
         </div>
@@ -261,7 +261,7 @@ export default function CalendarPage() {
         {/* 열람 전용 힌트 */}
         {!isAdmin && (
           <div style={{ textAlign:"center", padding:10, fontSize:11, color:"#cbd5e1", borderTop:"1px solid #f8fafc", marginTop:4 }}>
-            🔒 열람 전용 모드
+            🔒 閲覧専用モード
           </div>
         )}
       </div>
@@ -273,9 +273,9 @@ export default function CalendarPage() {
           style={modalBgStyle}
         >
           <div style={modalStyle}>
-            <div style={{ fontSize:16, fontWeight:700, color:"#1e293b", marginBottom:6 }}>관리자 로그인</div>
-            <div style={{ fontSize:12, color:"#94a3b8", marginBottom:20 }}>비밀번호를 입력해주세요</div>
-            <label style={labelStyle}>비밀번호</label>
+            <div style={{ fontSize:16, fontWeight:700, color:"#1e293b", marginBottom:6 }}>管理者ログイン</div>
+            <div style={{ fontSize:12, color:"#94a3b8", marginBottom:20 }}>パスワードを入力してください</div>
+            <label style={labelStyle}>パスワード</label>
             <input
               ref={pwRef}
               type="password"
@@ -285,10 +285,10 @@ export default function CalendarPage() {
               placeholder="••••••••"
               style={inputStyle}
             />
-            {pwError && <div style={{ fontSize:12, color:"#ef4444", marginTop:-10, marginBottom:14 }}>비밀번호가 틀렸습니다</div>}
+            {pwError && <div style={{ fontSize:12, color:"#ef4444", marginTop:-10, marginBottom:14 }}>パスワードが違います</div>}
             <div style={{ display:"flex", gap:8 }}>
-              <button onClick={doLogin} style={btnPrimary}>로그인</button>
-              <button onClick={() => setLoginOpen(false)} style={btnCancel}>취소</button>
+              <button onClick={doLogin} style={btnPrimary}>ログイン</button>
+              <button onClick={() => setLoginOpen(false)} style={btnCancel}>キャンセル</button>
             </div>
           </div>
         </div>
@@ -302,30 +302,30 @@ export default function CalendarPage() {
         >
           <div style={modalStyle}>
             <div style={{ fontSize:16, fontWeight:700, color:"#1e293b", marginBottom:6 }}>
-              {curYear}년 {curMonth + 1}월 {selectedDay}일
+              {curYear}年{curMonth + 1}月{selectedDay}日
             </div>
-            <div style={{ fontSize:12, color:"#94a3b8", marginBottom:20 }}>관리자 편집 모드</div>
-            <label style={labelStyle}>메모 · 일정</label>
+            <div style={{ fontSize:12, color:"#94a3b8", marginBottom:20 }}>管理者編集モード</div>
+            <label style={labelStyle}>メモ・スケジュール</label>
             <textarea
               ref={memoRef}
               value={memoInput}
               onChange={e => setMemoInput(e.target.value)}
               rows={5}
-              placeholder={"예: 오전 에어컨 설치 (방학동)\n오후 누전차단기 교체 (쌍문동)\n17:00 견적 상담"}
+              placeholder={"例：午前 通訳業務\n午後 資料翻訳\n17:00 打合せ"}
               style={{ ...inputStyle, resize:"vertical", marginBottom:18 }}
             />
             <div style={{ display:"flex", gap:8 }}>
               <button onClick={handleSaveMemo} disabled={saving} style={btnPrimary}>
-                {saving ? "저장 중..." : "저장"}
+                {saving ? "保存中..." : "保存"}
               </button>
               {(memos[memoKey(curYear, curMonth, selectedDay)] ?? "") && (
                 <button onClick={handleDeleteMemo} disabled={saving} style={{ background:"#fee2e2", color:"#ef4444", border:"none", borderRadius:9, padding:"10px 14px", fontSize:13, fontWeight:600, cursor:"pointer" }}>
-                  삭제
+                  削除
                 </button>
               )}
-              <button onClick={() => { setMemoOpen(false); setSelectedDay(null); }} style={btnCancel}>취소</button>
+              <button onClick={() => { setMemoOpen(false); setSelectedDay(null); }} style={btnCancel}>キャンセル</button>
             </div>
-            <div style={{ fontSize:11, color:"#cbd5e1", marginTop:12, textAlign:"right" }}>Ctrl+Enter로 저장</div>
+            <div style={{ fontSize:11, color:"#cbd5e1", marginTop:12, textAlign:"right" }}>Ctrl+Enterで保存</div>
           </div>
         </div>
       )}
