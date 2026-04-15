@@ -19,7 +19,7 @@ export async function GET() {
   }
 
   try {
-    const supabase = createClient(url, serviceKey);
+    const supabase = createClient(url, anonKey!);
     const { data, error } = await supabase
       .from("schedules")
       .select("id, date, memo")
